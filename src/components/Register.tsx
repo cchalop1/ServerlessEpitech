@@ -22,7 +22,7 @@ const Register = () => {
   if (user) {
     return (
       <div>
-        <p>Registered User: {user.email}</p>
+        <p>Registered User: {user.user.email}</p>
       </div>
     );
   }

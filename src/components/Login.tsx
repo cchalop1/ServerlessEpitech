@@ -15,15 +15,9 @@ const Login = () => {
     navigate("/", { replace: true });
     return <></>;
   }
-  if (error) {
-    return (
-      <div>
-        <p>Error: {error}</p>
-      </div>
-    );
-  }
   return (
     <div>
+      <div>{error && error.message}</div>
       <input
         type="email"
         value={email}
