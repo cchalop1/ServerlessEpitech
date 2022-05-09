@@ -26,6 +26,7 @@ const Register = () => {
       </div>
     );
   }
+
   return (
     <div className="App">
       <input
