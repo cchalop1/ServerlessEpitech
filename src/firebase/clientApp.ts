@@ -3,15 +3,15 @@ import "firebase/auth";
 import "firebase/firestore";
 
 const clientCredentials = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_API_KEY,
-  projectId: import.meta.env.VITE_FIREBASE_API_KEY,
-  storageBucket: import.meta.env.VITE_FIREBASE_API_KEY,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_API_KEY,
-  appId: import.meta.env.VITE_FIREBASE_API_KEY,
+  apiKey: "AIzaSyD08XRD-gb5ce5LPlf95bGki4mqa0vJCxA",
+  authDomain: "serverlessepitech.firebaseapp.com",
+  projectId: "serverlessepitech",
+  storageBucket: "serverlessepitech.appspot.com",
+  messagingSenderId: "152587331784",
+  appId: "1:152587331784:web:6052fc859ddfc464895dfd",
 };
 
-
+// Initialize Firebase
 const app = initializeApp(clientCredentials);
 
 // Initialize Firebase Authentication and get a reference to the service
