@@ -13,6 +13,7 @@ const db = getFirestore(firebase);
 
 const Messages = () => {
   const messagesRef = collection(db, "messages");
+  const [data, setData] = useState<string>("");
   const [messages, setMessage] = useState<Array<Message>>([]);
 
   useEffect(() => {
@@ -28,18 +29,24 @@ const Messages = () => {
     });
   }, []);
 
-  const submit = async (e: React.SyntheticEvent) => {
+  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await addDoc(messagesRef, {
-      content: e.target.content.value,
+      content: data,
       createAt: serverTimestamp(),
     });
+    setData("");
   };
 
   return (
     <div>
       <form onSubmit={submit}>
-        <input name="content" type="text"></input>
+        <input
+          name="content"
+          type="text"
+          value={data}
+          onChange={(e) => setData(e.target.value)}
+        ></input>
         <button type="submit">Send</button>
       </form>
       {messages.map((m, idx) => (
