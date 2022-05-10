@@ -35,6 +35,8 @@ const Login = () => {
       >
         Login
       </button>
+      {/* TODO: replace with react router link */}
+      <a href="/register">register</a>
     </div>
   );
 };

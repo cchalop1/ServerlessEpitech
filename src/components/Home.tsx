@@ -2,6 +2,7 @@ import firebase from "../firebase/clientApp";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import Messages from "./Messages";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ const Home = () => {
     <div>
       <h1>Home</h1>
       <button onClick={logout}>Logout</button>
+      <Messages />
     </div>
   );
 };

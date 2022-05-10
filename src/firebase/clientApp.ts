@@ -2,8 +2,6 @@ import { initializeApp } from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 
-console.log(import.meta.env)
-
 const clientCredentials = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -13,7 +11,7 @@ const clientCredentials = {
   appId: import.meta.env.VITE_FIREBASE_API_KEY,
 };
 
-// Initialize Firebase
+
 const app = initializeApp(clientCredentials);
 
 // Initialize Firebase Authentication and get a reference to the service
