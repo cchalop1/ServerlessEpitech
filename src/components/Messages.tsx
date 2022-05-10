@@ -34,12 +34,6 @@ const Messages = () => {
       content: e.target.content.value,
       createAt: serverTimestamp(),
     });
-    // // console.log(e.target.content.value);
-    // const r = await addDoc(messages, {
-    //   content: e.target.content.value,
-    //   createAt: serverTimestamp(),
-    // });
-    // console.log(r);
   };
 
   return (

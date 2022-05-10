@@ -2,7 +2,7 @@ import firebase from "../firebase/clientApp";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -35,8 +35,7 @@ const Login = () => {
       >
         Login
       </button>
-      {/* TODO: replace with react router link */}
-      <a href="/register">register</a>
+      <Link to={"/register"}>register</Link>
     </div>
   );
 };

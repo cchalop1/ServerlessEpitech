@@ -2,8 +2,10 @@ import firebase from "../firebase/clientApp";
 import { getAuth } from "firebase/auth";
 import { useState } from "react";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [createUserWithEmailAndPassword, user, loading, error] =
@@ -19,13 +21,6 @@ const Register = () => {
   if (loading) {
     return <p>Loading...</p>;
   }
-  if (user) {
-    return (
-      <div>
-        <p>Registered User: {user.user.email}</p>
-      </div>
-    );
-  }
 
   return (
     <div className="App">
@@ -39,9 +34,15 @@ const Register = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button onClick={() => createUserWithEmailAndPassword(email, password)}>
+      <button
+        onClick={() => {
+          createUserWithEmailAndPassword(email, password);
+          navigate("/login", { replace: true });
+        }}
+      >
         Register
       </button>
+      <Link to={"/login"}>login</Link>
     </div>
   );
 };
