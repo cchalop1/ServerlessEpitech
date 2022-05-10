@@ -1,8 +1,10 @@
 import firebase from "../firebase/clientApp";
 import {
+  addDoc,
   collection,
   getFirestore,
   onSnapshot,
+  serverTimestamp,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Message } from "../types/Messages";
@@ -19,6 +21,7 @@ const Messages = () => {
         return {
           id: doc.id,
           content: doc.data().content,
+          createAt: doc.data().createAt,
         };
       });
       setMessage(result);
@@ -26,7 +29,11 @@ const Messages = () => {
   }, []);
 
   const submit = async (e: React.SyntheticEvent) => {
-    // e.preventDefault();
+    e.preventDefault();
+    await addDoc(messagesRef, {
+      content: e.target.content.value,
+      createAt: serverTimestamp(),
+    });
     // // console.log(e.target.content.value);
     // const r = await addDoc(messages, {
     //   content: e.target.content.value,
