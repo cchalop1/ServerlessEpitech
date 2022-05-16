@@ -8,7 +8,9 @@ const db = admin.firestore(app);
 export const createUserDocument = functions.auth
   .user()
   .onCreate((user: UserRecord) => {
-    db.collection("users").doc(user.uid).set({ email: user.email });
+    db.collection("users")
+      .doc(user.uid)
+      .set({ email: user.email, username: "" });
   });
 
 export const deleteUserDocument = functions.auth

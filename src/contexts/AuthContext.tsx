@@ -1,6 +1,7 @@
 import { getAuth } from "firebase/auth";
 import { createContext, Suspense } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
 
 const initState = {};
 
@@ -11,9 +12,14 @@ type AuthProviderProps = {
 };
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user] = useAuthState(getAuth());
-  if (!user) {
-    return <Suspense></Suspense>;
+  const [user, loading] = useAuthState(getAuth());
+  const navigate = useNavigate();
+  if (loading) {
+    return <Suspense children={<div>loading...</div>}></Suspense>;
+  }
+  if (!user && !loading) {
+    navigate("/login");
+    return <Suspense children={<div>loading...</div>}></Suspense>;
   }
   return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
 }

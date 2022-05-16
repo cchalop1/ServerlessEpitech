@@ -1,13 +1,12 @@
-import { getAuth, User as AuthUser } from "firebase/auth";
+import { useContext, useEffect, useRef, useState } from "react";
+import { User as AuthUser } from "firebase/auth";
 import { getFirestore, doc, updateDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useDocument } from "react-firebase-hooks/firestore";
 
 import { CheckIcon, PencilIcon } from "@heroicons/react/outline";
 
 import firebase from "../firebase/clientApp";
-import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { User } from "../types/User";
 
@@ -46,7 +45,11 @@ const Profile = () => {
 
   const handleIsEditing = async () => {
     if (isEditing) {
-      await updateDoc(userDoc, userData);
+      try {
+        await updateDoc(userDoc, userData);
+      } catch (e) {
+        console.log(e);
+      }
     }
     setIsEditing(!isEditing);
   };
@@ -79,7 +82,11 @@ const Profile = () => {
           <div>
             <img
               className="h-20 w-20 rounded-full cursor-pointer"
-              src={userData.imageUrl}
+              src={
+                userData.imageUrl
+                  ? userData.imageUrl
+                  : "https://static.vecteezy.com/system/resources/previews/002/318/271/original/user-profile-icon-free-vector.jpg"
+              }
               onClick={() =>
                 inputFileRef.current && inputFileRef.current.click()
               }
