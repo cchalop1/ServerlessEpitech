@@ -17,7 +17,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   if (loading) {
     return <Suspense children={<div>loading...</div>}></Suspense>;
   }
-  if (!user && !loading) {
+  if (!user || !loading) {
     navigate("/login");
     return <Suspense children={<div>loading...</div>}></Suspense>;
   }
