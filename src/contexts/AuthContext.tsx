@@ -6,7 +6,11 @@ const initState = {};
 
 export const AuthContext = createContext(initState);
 
-export function AuthProvider({ children }) {
+type AuthProviderProps = {
+  children: React.ReactNode;
+};
+
+export function AuthProvider({ children }: AuthProviderProps) {
   const [user] = useAuthState(getAuth());
   if (!user) {
     return <Suspense></Suspense>;

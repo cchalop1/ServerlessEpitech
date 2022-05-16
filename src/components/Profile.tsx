@@ -1,4 +1,4 @@
-import { getAuth } from "firebase/auth";
+import { getAuth, User as AuthUser } from "firebase/auth";
 import { getFirestore, doc, updateDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -9,23 +9,24 @@ import { CheckIcon, PencilIcon } from "@heroicons/react/outline";
 import firebase from "../firebase/clientApp";
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import { User } from "../types/User";
 
 const db = getFirestore(firebase);
 const storage = getStorage(firebase);
 
 const Profile = () => {
-  const authUser = useContext(AuthContext);
+  const authUser = useContext(AuthContext) as AuthUser;
 
-  const inputFileRef = useRef(null);
+  const inputFileRef = useRef<HTMLInputElement>(null);
 
   const userDoc = doc(db, "users", authUser.uid);
   const [user, loading, error] = useDocument(userDoc);
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState<User | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     if (user) {
-      setUserData(user.data());
+      setUserData(user.data() as User);
     }
   }, [user]);
 
@@ -79,7 +80,9 @@ const Profile = () => {
             <img
               className="h-20 w-20 rounded-full cursor-pointer"
               src={userData.imageUrl}
-              onClick={() => inputFileRef.current.click()}
+              onClick={() =>
+                inputFileRef.current && inputFileRef.current.click()
+              }
             />
             <input
               hidden
