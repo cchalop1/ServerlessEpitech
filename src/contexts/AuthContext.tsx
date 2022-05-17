@@ -1,4 +1,4 @@
-import { getAuth } from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
 import { createContext, Suspense } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
@@ -17,9 +17,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
   if (loading) {
     return <Suspense children={<div>loading...</div>}></Suspense>;
   }
-  if (!user || !loading) {
+  if (!user && !loading) {
     navigate("/login");
     return <Suspense children={<div>loading...</div>}></Suspense>;
   }
-  return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
+  const logout = async () => {
+    await signOut(getAuth());
+    navigate("/login", { replace: true });
+  };
+  return (
+    <AuthContext.Provider value={{ user, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }

@@ -6,8 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [data, setData] = useState({ email: "", password: "" });
   const [createUserWithEmailAndPassword, user, loading, error] =
     useCreateUserWithEmailAndPassword(getAuth(firebase));
 
@@ -26,17 +25,19 @@ const Register = () => {
     <div className="App">
       <input
         type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        placeholder="email"
+        value={data.email}
+        onChange={(e) => setData({ ...data, email: e.target.value })}
       />
       <input
         type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        placeholder="password"
+        value={data.password}
+        onChange={(e) => setData({ ...data, password: e.target.value })}
       />
       <button
         onClick={() => {
-          createUserWithEmailAndPassword(email, password);
+          createUserWithEmailAndPassword(data.email, data.password);
           navigate("/login", { replace: true });
         }}
       >
