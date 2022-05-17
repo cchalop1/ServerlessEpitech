@@ -12,13 +12,10 @@ export const createUserDocument = functions.auth
       .collection("users")
       .doc(user.uid)
       .set({ email: user.email, username: "" });
-    let data = (await db.collection("roles").doc("users").get()).data();
-    // TODO: fix this part for add user uid to the roles parts
-    if (data) {
-      let users = data.users;
-      users[user.uid] = true;
-      await db.collection("roles").doc("users").update(users);
-    }
+    await db
+      .collection("roles")
+      .doc(user.uid)
+      .set({value: "user"});
   });
 
 export const deleteUserDocument = functions.auth
