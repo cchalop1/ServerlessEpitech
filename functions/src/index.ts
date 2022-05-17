@@ -12,14 +12,12 @@ export const createUserDocument = functions.auth
       .collection("users")
       .doc(user.uid)
       .set({ email: user.email, username: "" });
-    await db
-      .collection("roles")
-      .doc(user.uid)
-      .set({value: "user"});
+    await db.collection("roles").doc(user.uid).set({ value: "user" });
   });
 
 export const deleteUserDocument = functions.auth
   .user()
-  .onDelete((user: UserRecord) => {
-    db.collection("users").doc(user.uid).delete();
+  .onDelete(async (user: UserRecord) => {
+    await db.collection("users").doc(user.uid).delete();
+    await db.collection("roles").doc(user.uid).delete();
   });
