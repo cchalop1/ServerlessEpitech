@@ -4,11 +4,12 @@ import firebase from "../firebase/clientApp";
 
 type UserCardProps = {
   user: User;
+  isAdmin: boolean;
 };
 
 const db = getFirestore(firebase);
 
-const UserCard = ({ user }: UserCardProps) => {
+const UserCard = ({ user, isAdmin }: UserCardProps) => {
   const handleRolesChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const rolesDoc = doc(db, "roles", user.uid);
     await updateDoc(rolesDoc, {
@@ -36,6 +37,7 @@ const UserCard = ({ user }: UserCardProps) => {
         className="h-8 bg-white cursor-pointer"
         onChange={handleRolesChange}
         defaultValue={user.role}
+        disabled={!isAdmin}
       >
         {["admin", "manager", "user"].map((option, idx) => {
           return (
