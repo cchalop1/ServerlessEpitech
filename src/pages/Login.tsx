@@ -8,8 +8,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [user, loading, error] = useAuthState(getAuth(firebase));
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [data, setData] = useState({ email: "", password: "" });
 
   if (!loading && user) {
     navigate("/", { replace: true });
@@ -20,17 +19,19 @@ const Login = () => {
       <div>{error && error.message}</div>
       <input
         type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        placeholder="email"
+        value={data.email}
+        onChange={(e) => setData({ ...data, email: e.target.value })}
       />
       <input
         type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        placeholder="password"
+        value={data.password}
+        onChange={(e) => setData({ ...data, password: e.target.value })}
       />
       <button
         onClick={() =>
-          signInWithEmailAndPassword(getAuth(firebase), email, password)
+          signInWithEmailAndPassword(getAuth(firebase), data.email, data.password)
         }
       >
         Login

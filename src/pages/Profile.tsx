@@ -1,25 +1,24 @@
-import { getAuth, User as AuthUser } from "firebase/auth";
+import { useContext, useEffect, useRef, useState } from "react";
 import { getFirestore, doc, updateDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useDocument } from "react-firebase-hooks/firestore";
 
 import { CheckIcon, PencilIcon } from "@heroicons/react/outline";
 
 import firebase from "../firebase/clientApp";
-import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { User } from "../types/User";
+import Headers from "../components/Header";
 
 const db = getFirestore(firebase);
 const storage = getStorage(firebase);
 
 const Profile = () => {
-  const authUser = useContext(AuthContext) as AuthUser;
+  const authUser = useContext(AuthContext) as any;
 
   const inputFileRef = useRef<HTMLInputElement>(null);
 
-  const userDoc = doc(db, "users", authUser.uid);
+  const userDoc = doc(db, "users", authUser.user.uid);
   const [user, loading, error] = useDocument(userDoc);
   const [userData, setUserData] = useState<User | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -35,7 +34,10 @@ const Profile = () => {
       return;
     }
     if (!userData) return;
-    const imageRef = ref(storage, `profilePicture/${authUser.uid}/profile.jpg`);
+    const imageRef = ref(
+      storage,
+      `profilePicture/${authUser.user.uid}/profile.jpg`
+    );
     const res = await uploadBytes(imageRef, imageUpload[0]);
     console.log(res);
     const urlResult = await getDownloadURL(imageRef);
@@ -46,7 +48,11 @@ const Profile = () => {
 
   const handleIsEditing = async () => {
     if (isEditing) {
-      await updateDoc(userDoc, userData);
+      try {
+        await updateDoc(userDoc, userData);
+      } catch (e) {
+        console.log(e);
+      }
     }
     setIsEditing(!isEditing);
   };
@@ -58,7 +64,8 @@ const Profile = () => {
     return <div>error: {error.message}</div>;
   }
   return (
-    <div className="h-screen flex justify-center items-center flex-col">
+    <div className="h-screen pl-10 pr-10">
+      <Headers />
       <div className="rounded-xl pl-8 pr-8 pt-4 pb-4 w-1/3 border">
         <div className="flex justify-between mb-2">
           <div className="text-xl">Profile</div>
@@ -79,7 +86,11 @@ const Profile = () => {
           <div>
             <img
               className="h-20 w-20 rounded-full cursor-pointer"
-              src={userData.imageUrl}
+              src={
+                userData.imageUrl
+                  ? userData.imageUrl
+                  : "https://static.vecteezy.com/system/resources/previews/002/318/271/original/user-profile-icon-free-vector.jpg"
+              }
               onClick={() =>
                 inputFileRef.current && inputFileRef.current.click()
               }
@@ -94,7 +105,6 @@ const Profile = () => {
           </div>
           <div>
             <div>{userData.email}</div>
-            <div>{userData.roles}</div>
             {isEditing ? (
               <input
                 type="text"
