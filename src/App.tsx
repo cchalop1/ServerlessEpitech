@@ -28,7 +28,11 @@ function App() {
         />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
-        <Route path="conversations" element={<Conversations />} />
+        <Route path="conversations" element={
+          <AuthProvider>
+            <Conversations />
+          </AuthProvider>
+        } />
       </Routes>
     </BrowserRouter>
   );

@@ -1,10 +1,9 @@
-import { User } from "firebase/auth";
-import { Message } from "./Messages";
+import { User } from "./User";
 
 export type Conversation = {
   id: string;
-  messages: [Message];
+  icon: String;
   name: String;
+  userId: User;
   users: [User];
-  createAt: Date;
 };

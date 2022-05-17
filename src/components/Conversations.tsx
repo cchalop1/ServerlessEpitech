@@ -32,7 +32,7 @@ import { Conversation } from "../types/Conversation";
 const db = getFirestore(firebase);
 
 const Conversations = () => {
-  const conversationsRef = collection(db, "conversation");
+  const conversationsRef = collection(db, "conversations");
   const navigate = useNavigate();
   const [data, setData] = useState<string>("");
   const [conversations, setConversation] = useState<Array<Conversation>>([]);
@@ -43,8 +43,8 @@ const Conversations = () => {
     return <div></div>;
   }
 
-  const onClickConversation = (conv: any) => {
-    console.log(conv.target);
+  const handleConvClick = (convId: String) => {
+    console.log(convId);
   };
 
   useEffect(() => {
@@ -53,9 +53,9 @@ const Conversations = () => {
         return {
           id: doc.id,
           name: doc.data().name,
+          icon: doc.data().name,
           users: doc.data().users,
-          messages: doc.data().messages,
-          createAt: doc.data().createAt,
+          userId: doc.data().userId,
         };
       });
       console.log(result);
@@ -89,7 +89,7 @@ const Conversations = () => {
             <Menu iconShape="square">
 
               {conversations.map((conv, idx) => (
-                <MenuItem onClick={onClickConversation} key={idx} icon={<GiMagnifyingGlass />}>{conv.name}</MenuItem>
+                <MenuItem onClick={() => handleConvClick(conv.id)} key={idx} icon={<GiMagnifyingGlass />}>{conv.name}</MenuItem>
               ))}
 
             </Menu>
