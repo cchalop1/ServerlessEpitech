@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import { AuthProvider } from "./contexts/AuthContext";
+import Conversations from "./components/Conversations";
 
 function App() {
   return (
@@ -27,6 +28,11 @@ function App() {
         />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
+        <Route path="conversations" element={
+          <AuthProvider>
+            <Conversations />
+          </AuthProvider>
+        } />
       </Routes>
     </BrowserRouter>
   );
