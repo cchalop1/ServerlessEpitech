@@ -1,5 +1,7 @@
 export type Message = {
   id: string;
+  convID: string;
   content: string;
-  createAt: Date;
+  createdAt: Date;
+  userID: string;
 };
