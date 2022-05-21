@@ -21,3 +21,27 @@ export const deleteUserDocument = functions.auth
     await db.collection("users").doc(user.uid).delete();
     await db.collection("roles").doc(user.uid).delete();
   });
+
+export const updateMessageOnUserUpdate = functions.firestore
+  .document("users/{userId}")
+  .onUpdate(async (change, context) => {
+    const userId = context.params.userId;
+    const user = change.after.data();
+
+    console.log(user);
+
+    const messages = await db
+      .collection("messages")
+      .where("user.uid", "==", userId)
+      .get();
+    messages.docs.forEach(async (message) => {
+      console.log(message.data());
+      await db
+        .collection("messages")
+        .doc(message.id)
+        .update({
+          ...message.data(),
+          user: { ...user, uid: userId },
+        });
+    });
+  });

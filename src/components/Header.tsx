@@ -8,7 +8,7 @@ const Headers = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex justify-between pt-2">
+    <Content>
       <div
         className="text-2xl font-bold select-none cursor-pointer"
         onClick={() => navigate("/", { replace: true })}
@@ -29,6 +29,14 @@ const Headers = () => {
           Logout
         </button>
       </div>
+    </Content>
+  );
+};
+
+const Content = ({ children, ...props }) => {
+  return (
+    <div className="flex justify-between pt-2" {...props}>
+      {children}
     </div>
   );
 };
