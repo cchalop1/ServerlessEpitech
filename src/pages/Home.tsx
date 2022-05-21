@@ -10,7 +10,7 @@ const Home = () => {
     <div className="h-screen pl-10 pr-10">
       <Headers />
       <Conversations setCurrentConvId={setCurrentConvId} />
-      <MessagesList currentConvId={currentConvId} />
+      {currentConvId && <MessagesList currentConvId={currentConvId} />}
       {/* <InputMessgas /> */}
       {/* <Messages /> */}
     </div>

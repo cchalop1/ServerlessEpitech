@@ -1,8 +1,9 @@
 import firebase from "../firebase/clientApp";
-import { collection, getFirestore, onSnapshot, doc } from "firebase/firestore";
+import { collection, getFirestore, onSnapshot, doc, query, where } from "firebase/firestore";
 import { useEffect, useState, useContext } from "react"
 import { Message } from "../types/Messages"
 import { AuthContext } from "../contexts/AuthContext";
+import { User } from "../types/User";
 
 const db = getFirestore(firebase);
 
@@ -10,27 +11,26 @@ type MessagesListProps = {
   currentConvId: string | null;
 }
 
-export default function MessagesList({ currentConvId }: (MessagesListProps)) {
+export default function MessagesList({ currentConvId }: MessagesListProps) {
   const authUser = (useContext(AuthContext) as any).user;
   const [messages, setMessages] = useState<Array<Message>>([]);
   const messagesRef = collection(db, "messages");
 
+  const q = query(messagesRef, where("convID", "==", currentConvId));
+
   useEffect(() => {
-    onSnapshot(messagesRef, (snapshot) => {
-      if (currentConvId !== null) {
-        const result = snapshot.docs
-          .filter((doc) => doc.data().convID === currentConvId)
-          .map(doc => {
-            return {
-              id: doc.id,
-              convID: doc.data().convID,
-              content: doc.data().content,
-              createdAt: doc.data().createdAt,
-              userID: doc.data().userID
-            }
-          })
-        setMessages(result)
-      }
+    onSnapshot(q, (snapshot) => {
+      const result = snapshot.docs
+        .map(doc => {
+          return {
+            id: doc.id,
+            convID: doc.data().convID,
+            content: doc.data().content,
+            createdAt: doc.data().createdAt,
+            user: doc.data().user as User
+          }
+        })
+      setMessages(result)
     })
   }, [currentConvId])
 
@@ -49,7 +49,7 @@ export default function MessagesList({ currentConvId }: (MessagesListProps)) {
       <div className={"py-2 px-4 m-1 rounded-lg text-white" + isOwnMessage(false)}>Question?</div>
       */}
       {messages.length && messages.map(message => <div
-        className={"py-2 px-4 m-1 rounded-lg text-white" + isOwnMessage(message.userID)}
+        className={"py-2 px-4 m-1 rounded-lg text-white" + isOwnMessage(message.user.uid)}
         key={message.id}
       >
         {message.content}
