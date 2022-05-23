@@ -9,7 +9,7 @@ const Home = () => {
   return (
     <div className="h-screen pl-10 pr-10">
       <Headers />
-      <Conversations setCurrentConvId={setCurrentConvId} />
+      {/* <Conversations setCurrentConvId={setCurrentConvId} /> */}
       {/* {!currentConvId && <MessagesList currentConvId={currentConvId} />} */}
       <InputMessage />
       {/* <Messages /> */}
