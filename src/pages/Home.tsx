@@ -1,4 +1,5 @@
 import Messages from "../components/Messages";
+import InputMessage from "../components/InputMessage"
 import Headers from "../components/Header";
 import Conversations from "../components/Conversations";
 import { useState } from "react";
@@ -10,7 +11,7 @@ const Home = () => {
       <Headers />
       <Conversations setCurrentConvId={setCurrentConvId} />
       {/* {!currentConvId && <MessagesList currentConvId={currentConvId} />} */}
-      {/* <InputMessgas /> */}
+      <InputMessage />
       {/* <Messages /> */}
     </div>
   );
