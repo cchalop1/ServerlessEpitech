@@ -1,12 +1,10 @@
-import firebase from "../firebase/clientApp";
+import firebase, { db } from "../firebase/clientApp";
 import { collection, getFirestore, onSnapshot, query, where, orderBy } from "firebase/firestore";
 import { useEffect, useState, useContext } from "react"
 import { Message } from "../types/Messages"
 import { MessageBubble } from "./MessageBubble"
 import { AuthContext } from "../contexts/AuthContext";
 import { User } from "../types/User";
-
-const db = getFirestore(firebase);
 
 type MessagesListProps = {
   currentConvId: string | null;

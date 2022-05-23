@@ -5,12 +5,9 @@ import { getFirestore, doc, updateDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useDocument } from "react-firebase-hooks/firestore";
 
-import firebase from "../firebase/clientApp";
+import firebase, { db, storage } from "../firebase/clientApp";
 import { AuthContext } from "../contexts/AuthContext";
 import { User } from "../types/User";
-
-const db = getFirestore(firebase);
-const storage = getStorage(firebase);
 
 const ProfileCard = () => {
   const inputFileRef = useRef<HTMLInputElement>(null);

@@ -1,4 +1,4 @@
-import firebase from "../firebase/clientApp";
+import firebase, { db } from "../firebase/clientApp";
 import {
   addDoc,
   collection,
@@ -8,8 +8,6 @@ import {
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Message } from "../types/Messages";
-
-const db = getFirestore(firebase);
 
 const Messages = () => {
   const messagesRef = collection(db, "messages");

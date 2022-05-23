@@ -1,4 +1,4 @@
-import firebase from "../firebase/clientApp";
+import firebase, { db } from "../firebase/clientApp";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
@@ -24,8 +24,6 @@ import { useContext, useEffect, useState } from "react";
 import { Conversation } from "../types/Conversation";
 import { AuthContext } from "../contexts/AuthContext";
 import { useDocument } from "react-firebase-hooks/firestore";
-
-const db = getFirestore(firebase);
 
 type ConversationProps = {
   setCurrentConvId: any;

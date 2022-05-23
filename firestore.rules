@@ -1,0 +1,56 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+  
+   function getConvFromMessageId(messageId) {
+      return get(/databases/$(database)/documents/messages/$(messageId)).data.convID;
+    }
+
+
+    match /users/{userId} {
+      allow read;
+      
+      allow update: if userId == request.auth.uid &&
+      	request.resource.data.email is string &&
+        request.resource.data.imageUrl is string && 
+        request.resource.data.username is string && 
+        request.resource.data.username.size() < 10;
+        
+      allow delete: if userId == request.auth.uid ||
+      	get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.value == 'admin';
+    }
+    
+    match /conversations/{convId} {
+      allow read: if get(/databases/$(database)/documents/conversation/$(convId)).data.users[request.auth.uid] ||
+      	get(/databases/$(database)/documents/conversation/$(convId)).data.userId == request.auth.uid;
+      
+      allow list: if true;
+      
+      allow create: if get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.value == 'manager' &&
+      	request.resource.data.icon is string && 
+        request.resource.data.name is string && 
+        request.resource.data.userId is string;
+        
+			allow update: if get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.value == 'manager' &&
+      	request.resource.data.icon is string && 
+        request.resource.data.name is string && 
+        request.resource.data.userId is string;
+        
+			allow delete: if get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.value == 'manager' &&
+      	get(/databases/$(database)/documents/conversation/$(convId)).data.userId == request.auth.uid;
+    }
+    
+    match /roles/{rolesId} {
+    	allow read: if true;
+      allow update: if get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.value == 'admin';
+    }
+    
+    match /messages/{messageId} {
+    	allow read: if get(/databases/$(database)/documents/conversations/$(getConvFromMessageId(messageId))).data.users[request.auth.uid];
+  
+			allow list: if true;
+      
+      allow create: if true;
+    }
+  }
+}
