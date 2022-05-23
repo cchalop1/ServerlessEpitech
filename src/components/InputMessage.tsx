@@ -31,7 +31,7 @@ const InputMessage = (props : InputMessageProps) => {
      content: messageInput,
      convID: props.currentConvId,
      createdAt: serverTimestamp(),
-     user: userData
+     user: {...userData, uid: user?.id}
     }
     setMessageInput("");
     await addDoc(messagesRef, newMessage);
