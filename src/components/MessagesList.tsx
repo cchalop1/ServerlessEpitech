@@ -43,8 +43,8 @@ export default function MessagesList({ currentConvId }: MessagesListProps) {
           <div className={"py-2 px-4 m-1 rounded-lg text-white" + isOwnMessage(true)}>Réponse!</div>
       <div className={"py-2 px-4 m-1 rounded-lg text-white" + isOwnMessage(false)}>Question?</div>
       */}
-      {messages.length && messages.map(message => (
-        <MessageBubble message={message} ownUID={authUser.uid} key={message.id} />
+      {messages.length && messages.map((message, index) => (
+        <MessageBubble message={message} ownUID={authUser.uid} hasOwnBefore={index - 1 >= 0 && message.user.uid === messages[index - 1].user.uid} key={message.id} />
       ))}
     </div>
   )
