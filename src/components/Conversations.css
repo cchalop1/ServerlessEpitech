@@ -79,3 +79,20 @@
     overflow: hidden;
   }
 }
+
+.close {
+  color: #fff;
+  background-color: #999;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  font-size: 30px;
+}
+
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+    outline: none;
+  }
