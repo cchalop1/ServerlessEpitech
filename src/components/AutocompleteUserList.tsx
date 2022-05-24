@@ -104,7 +104,21 @@ const AutoCompleteUserList = ({ users, setUsers }: AutoCompleteProps) => {
 
           return (
             <li className={className} key={suggestion.uid} onClick={() => onClick(suggestion) }>
-              <UserCard user={suggestion} isAdmin={false} />
+              <div key={index} className="flex">
+                <img
+                  className="h-12 w-12 rounded-full cursor-pointer"
+                  onClick={() => onClick(suggestion)}
+                  src={
+                    suggestion.imageUrl
+                      ? suggestion.imageUrl
+                      : "https://static.vecteezy.com/system/resources/previews/002/318/271/original/user-profile-icon-free-vector.jpg"
+                  }
+                />
+                <div className="ml-4">
+                  <div className="font-bold">{suggestion.username}</div>
+                  <div>{suggestion.email}</div>
+                </div>
+              </div>
             </li>
           );
         })}
