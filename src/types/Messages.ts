@@ -4,6 +4,7 @@ export type Message = {
   id: string;
   convID: string;
   content: string;
-  createdAt: Date;
+  createdAt: any;
   user: User;
+  createdTimestamp: number;
 };

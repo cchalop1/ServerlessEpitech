@@ -26,23 +26,25 @@ export default function MessagesList({ currentConvId }: MessagesListProps) {
             convID: doc.data().convID,
             content: doc.data().content,
             createdAt: doc.data().createdAt,
-            user: doc.data().user as User
+            user: doc.data().user as User,
+            createdTimestamp: doc.data().createdAt.seconds
           }
         })
+        console.log(result)
       setMessages(result)
     })
   }, [currentConvId])
 
   return (
-    <div className="ml-80 min-h-full flex flex-col-reverse justify-start items-center pb-10">
+    <div className="min-h-full flex flex-col-reverse justify-start items-center pb-10">
       {/* ml-80: the sidebar covers this component otherwise, should be fixed with a flex or smth 
           min-h-full: css height is a bit to big, since the header takes some space
 
           <div className={"py-2 px-4 m-1 rounded-lg text-white" + isOwnMessage(true)}>Réponse!</div>
       <div className={"py-2 px-4 m-1 rounded-lg text-white" + isOwnMessage(false)}>Question?</div>
       */}
-      {messages.length && messages.map(message => (
-        <MessageBubble message={message} ownUID={authUser.uid} key={message.id} />
+      {messages.length && messages.map((message, index) => (
+        <MessageBubble message={message} ownUID={authUser.uid} hasOwnBefore={index - 1 >= 0 && message.user.uid === messages[index - 1].user.uid} key={message.id} />
       ))}
     </div>
   )
