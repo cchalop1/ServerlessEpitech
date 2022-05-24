@@ -60,6 +60,7 @@ const AutoCompleteUserList = ({ users, setUsers }: AutoCompleteProps) => {
     setFilteredSuggestions([]);
     setActiveSuggestionIndex(0);
     setShowSuggestions(false);
+    setInput("");
     if (!users.includes(user)) {
       setUsers(users.concat(user));
     }
