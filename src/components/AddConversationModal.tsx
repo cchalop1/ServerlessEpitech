@@ -94,7 +94,7 @@ const AddConversationModale = () => {
       >
         <div>
           <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Create a conversation</h2>
-          <button className="close" onClick={closeModal}>&times;</button>
+          <button className="close text-base font-medium rounded-lg p-1 bg-amber-300 text-white" onClick={closeModal}>&times;</button>
         </div>
         <div className="flex">
           <input
