@@ -50,7 +50,14 @@ service cloud.firestore {
   
 			allow list: if true;
       
-      allow create: if true;
+      allow create: if get(/databases/$(database)/documents/conversations/$(request.resource.data.convID)).data.users[request.auth.uid] &&
+      	request.resource.data.content is string &&
+        request.resource.data.convID is string &&
+        request.resource.data.createdAt is timestamp &&
+        request.resource.data.user is map &&
+        request.resource.data.user.email is string &&
+        request.resource.data.user.imageUrl is string && 
+        request.resource.data.user.username is string;
     }
   }
 }
