@@ -1,5 +1,9 @@
+import { User } from "./User";
+
 export type Message = {
   id: string;
+  convID: string;
   content: string;
-  createAt: Date;
+  createdAt: Date;
+  user: User;
 };
