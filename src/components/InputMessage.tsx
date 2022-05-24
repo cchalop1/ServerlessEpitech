@@ -38,7 +38,7 @@ const InputMessage = (props : InputMessageProps) => {
   };
 
   return (
-    <div id="input-message" className="w-9/12 absolute bottom-0 right-0 shadow-lg">
+    <div id="input-message" className="justify-self-end pb-4 shadow-lg">
       <form onSubmit={submit}>
         { messageInput.length == 0 ? (
             <input className="w-full border-2 border-grey border-solid rounded-tl-lg rounded-tr-lg rounded-br-lg rounded-bl-lg"

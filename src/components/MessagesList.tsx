@@ -28,15 +28,17 @@ export default function MessagesList({ currentConvId }: MessagesListProps) {
             convID: doc.data().convID,
             content: doc.data().content,
             createdAt: doc.data().createdAt,
-            user: doc.data().user as User
+            user: doc.data().user as User,
+            createdTimestamp: doc.data().createdAt.seconds
           }
         })
+        console.log(result)
       setMessages(result)
     })
   }, [currentConvId])
 
   return (
-    <div className="ml-80 min-h-full flex flex-col-reverse justify-start items-center pb-10">
+    <div className="min-h-full flex flex-col-reverse justify-start items-center pb-10">
       {/* ml-80: the sidebar covers this component otherwise, should be fixed with a flex or smth 
           min-h-full: css height is a bit to big, since the header takes some space
 

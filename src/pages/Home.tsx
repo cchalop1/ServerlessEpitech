@@ -10,8 +10,10 @@ const Home = () => {
     <div className="h-screen pl-10 pr-10">
       <Headers />
       <Conversations setCurrentConvId={setCurrentConvId} />
-      {currentConvId && <MessagesList currentConvId={currentConvId} />}
-      <InputMessage />
+      {currentConvId && <div className="flex flex-col ml-80 h-screen pb-4">
+        <MessagesList currentConvId={currentConvId} />
+        <InputMessage currentConvId={currentConvId} />
+      </div>}
     </div>
   );
 };
