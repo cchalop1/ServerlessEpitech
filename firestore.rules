@@ -29,7 +29,11 @@ service cloud.firestore {
       allow create: if get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.value == 'manager' &&
       	request.resource.data.icon is string && 
         request.resource.data.name is string && 
-        request.resource.data.userId is string;
+        request.resource.data.name.size() > 0 &&
+        request.resource.data.userId is string &&
+        request.resource.data.users is map &&
+        request.resource.data.users.size() > 1 &&
+        get(/databases/$(database)/documents/users/$(request.resource.data.userId)).data != null;
         
 			allow update: if get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.value == 'manager' &&
       	request.resource.data.icon is string && 
