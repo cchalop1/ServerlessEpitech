@@ -41,7 +41,7 @@ const AutoCompleteUserList = ({ users, setUsers }: AutoCompleteProps) => {
     });
   }, [authUser]);
 
-  const onChange = (e) => {
+  const onChange = (e: any) => {
     const userInput = e.target.value;
 
     // Filter our suggestions that don't contain the user's input
@@ -66,10 +66,10 @@ const AutoCompleteUserList = ({ users, setUsers }: AutoCompleteProps) => {
     }
   };
 
-  const onKeyDown = (e) => {
+  const onKeyDown = (e: any) => {
     // User pressed the enter key
     if (e.keyCode === 13) {
-      setInput(filteredSuggestions[activeSuggestionIndex]);
+      setInput(filteredSuggestions[activeSuggestionIndex].uid);
       setActiveSuggestionIndex(0);
       setShowSuggestions(false);
     }
