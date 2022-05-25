@@ -1,13 +1,11 @@
-import { doc, getFirestore, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { User } from "../types/User";
-import firebase from "../firebase/clientApp";
+import { db } from "../firebase/clientApp";
 
 type UserCardProps = {
   user: User;
   isAdmin: boolean;
 };
-
-const db = getFirestore(firebase);
 
 const UserCard = ({ user, isAdmin }: UserCardProps) => {
   const handleRolesChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {

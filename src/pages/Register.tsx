@@ -1,4 +1,4 @@
-import firebase from "../firebase/clientApp";
+import firebase, { auth } from "../firebase/clientApp";
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import { useState } from "react";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
@@ -8,7 +8,7 @@ const Register = () => {
   const navigate = useNavigate();
   const [data, setData] = useState({ email: "", password: "" });
   const [createUserWithEmailAndPassword, user, loading, error] =
-    useCreateUserWithEmailAndPassword(getAuth(firebase));
+    useCreateUserWithEmailAndPassword(auth);
 
   if (error) {
     return (

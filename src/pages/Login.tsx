@@ -1,4 +1,4 @@
-import firebase from "../firebase/clientApp";
+import firebase, { auth } from "../firebase/clientApp";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [user, loading, error] = useAuthState(getAuth(firebase));
+  const [user, loading, error] = useAuthState(auth);
 
   const [data, setData] = useState({ email: "", password: "" });
 
