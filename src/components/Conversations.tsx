@@ -24,6 +24,7 @@ import { useContext, useEffect, useState } from "react";
 import { Conversation } from "../types/Conversation";
 import { AuthContext } from "../contexts/AuthContext";
 import { useDocument } from "react-firebase-hooks/firestore";
+import AddConversationModale from "./AddConversationModal";
 
 type ConversationProps = {
   setCurrentConvId: any;
@@ -41,10 +42,6 @@ const Conversations = ({ setCurrentConvId }: ConversationProps) => {
     navigate("/login", { replace: true });
     return <div></div>;
   }
-
-  const handleCreateConv = () => {
-    console.log("Create conversation");
-  };
 
   useEffect(() => {
     onSnapshot(conversationsRef, (snapshot) => {
@@ -94,10 +91,10 @@ const Conversations = ({ setCurrentConvId }: ConversationProps) => {
             userRole?.data()?.value === "manager" ? (
               <Menu iconShape="square">
                 <MenuItem
-                  onClick={() => handleCreateConv()}
                   icon={<FaUserPlus />}
                 >
-                  Create a conversation
+                    <p>Create a conversation</p>
+                    <AddConversationModale></AddConversationModale>
                 </MenuItem>
               </Menu>
             ) : (

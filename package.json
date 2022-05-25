@@ -11,9 +11,11 @@
     "@heroicons/react": "^1.0.6",
     "firebase": "^9.8.0",
     "react": "^18.0.0",
+    "react-autocomplete": "^1.8.1",
     "react-dom": "^18.0.0",
     "react-firebase-hooks": "^5.0.3",
     "react-icons": "^4.3.1",
+    "react-modal": "^3.15.1",
     "react-pro-sidebar": "^0.7.1",
     "react-router-dom": "^6.3.0"
   },
