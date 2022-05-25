@@ -14,8 +14,8 @@ export function MessageBubble({ message, ownUID, hasOwnBefore }: MessageBubblePr
   return (
     <div className={isOwnMessage ? " self-end" : " self-start"}>
       <div className={"flex " + (!isOwnMessage ? "flex-row" : "flex-row-reverse")}>
-        {!hasOwnBefore && <img src={message.user.imageUrl} alt="" className="w-10 h-10 shrink-0 mb-6 rounded-full self-end" />}
-        <div className={isOwnMessage ? (hasOwnBefore ? "ml-40 mr-10" : "ml-40") : "mr-40"}>
+        {!hasOwnBefore && <img src={message.user.imageUrl} alt="" className="w-10 h-10 shrink-0 mb-6 rounded-full" />}
+        <div className={isOwnMessage ? (hasOwnBefore ? "ml-40 mr-10" : "ml-40") : (hasOwnBefore ? "ml-10 mr-40" : "mr-40")}>
           <div
             className={
               "py-2 px-4 m-[1px] rounded-lg text-white " +
