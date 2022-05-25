@@ -13,6 +13,7 @@ type MessagesListProps = {
 
 export default function MessagesList({ currentConvId }: MessagesListProps) {
   const authUser = (useContext(AuthContext) as any).user;
+  const [bubbles, setBubbles] = useState<Array<Message | Picture>>([])
   const [messages, setMessages] = useState<Array<Message>>([]);
   const [pictures, setPictures] = useState<Array<Picture>>([]);
   const messagesRef = collection(db, "messages");
@@ -33,6 +34,7 @@ export default function MessagesList({ currentConvId }: MessagesListProps) {
             user: doc.data().user as User,
           }
         })
+      setBubbles([...bubbles, ...messages])
       setMessages(messages)
     })
     onSnapshot(q2, (snapshot) => {
@@ -47,6 +49,7 @@ export default function MessagesList({ currentConvId }: MessagesListProps) {
           }
         })
         setPictures(pictures)
+        setBubbles([...bubbles, ...pictures])
     })
   }, [currentConvId])
 
