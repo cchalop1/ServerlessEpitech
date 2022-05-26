@@ -34,8 +34,7 @@ export default function MessagesList({ currentConvId }: MessagesListProps) {
             user: doc.data().user as User,
           }
         })
-      setBubbles([...bubbles, ...messages])
-      setMessages(messages)
+        setMessages(messages)
     })
     onSnapshot(q2, (snapshot) => {
       const pictures = snapshot.docs
@@ -48,16 +47,22 @@ export default function MessagesList({ currentConvId }: MessagesListProps) {
             user: doc.data().user as User,
           }
         })
-        setPictures(pictures)
-        setBubbles([...bubbles, ...pictures])
+      setPictures(pictures)
     })
+    const bubbles = [...pictures, ...messages]
+    bubbles.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds)
+    setBubbles(bubbles)
   }, [currentConvId])
 
   return (
-    <div className="min-h-full flex flex-col-reverse justify-start items-center pb-10">
-      {messages.length && messages.map((message, index) => (
-        <MessageBubble message={message} ownUID={authUser.uid} hasOwnBefore={index - 1 >= 0 && message.user.uid === messages[index - 1].user.uid} key={message.id} />
-      ))}
+    <div className="h-4/5 mt-4 flex flex-col-reverse overflow-auto justify-start items-center pb-10">
+      {bubbles.length && bubbles.map((element, index) => {
+        if ("content" in element) {
+          return <MessageBubble message={element} ownUID={authUser.uid} hasOwnBefore={index - 1 >= 0 && element.user.uid === bubbles[index - 1].user.uid} key={element.id} />
+        } else if ("imageUrl" in element) {
+          return <div key={element.id}>HERE A PICTURE !!!!</div>
+        }
+      })}
     </div>
   )
 }
