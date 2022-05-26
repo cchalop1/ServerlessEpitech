@@ -11,7 +11,7 @@ const Home = () => {
       <Headers />
       <div className="flex-grow flex flex-row">
         <Conversations setCurrentConvId={setCurrentConvId} />
-        {currentConvId && <div className="flex-grow flex flex-col ml-80 pb-4">
+        {currentConvId && <div className="flex-grow flex flex-col h-[90vh] ml-80 pb-4">
           <MessagesList currentConvId={currentConvId} />
           <InputMessage currentConvId={currentConvId} />
         </div>}
