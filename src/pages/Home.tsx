@@ -7,13 +7,15 @@ import { useState } from "react";
 const Home = () => {
   const [currentConvId, setCurrentConvId] = useState<string | null>(null);
   return (
-    <div className="h-screen pl-10 pr-10">
+    <div className="h-screen pl-10 pr-10 flex flex-col">
       <Headers />
-      <Conversations setCurrentConvId={setCurrentConvId} />
-      {currentConvId && <div className="flex flex-col ml-80 h-screen pb-4">
-        <MessagesList currentConvId={currentConvId} />
-        <InputMessage currentConvId={currentConvId} />
-      </div>}
+      <div className="flex-grow flex flex-row">
+        <Conversations setCurrentConvId={setCurrentConvId} />
+        {currentConvId && <div className="flex-grow flex flex-col ml-80 pb-4">
+          <MessagesList currentConvId={currentConvId} />
+          <InputMessage currentConvId={currentConvId} />
+        </div>}
+      </div>
     </div>
   );
 };
