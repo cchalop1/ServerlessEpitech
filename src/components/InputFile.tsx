@@ -22,8 +22,9 @@ const InputFile = (props: InputFileProps) => {
     return(
         <div className={"justify-self-end pb-4"}>
             <img
+                alt={"input-file"}
                 onClick={() => inputFileRef.current && inputFileRef.current.click()}
-                height={'30'}
+                height={"30"}
                 width={"30"}
                 src={"https://findicons.com/files/icons/1579/devine/48/file.png"}/>
             <input
