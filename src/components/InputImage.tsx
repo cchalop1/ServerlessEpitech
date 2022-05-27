@@ -15,7 +15,7 @@ const InputImage = (props: InputImageProps) => {
 
     const authUser = useContext(AuthContext) as any;
 
-    const uploadFile = async (imageUpload: FileList | null) => {
+    const uploadImage = async (imageUpload: FileList | null) => {
         console.log(FileList)
     };
 
@@ -32,7 +32,7 @@ const InputImage = (props: InputImageProps) => {
                 ref={inputFileRef}
                 type="file"
                 accept=".jpg, .jpeg"
-                onChange={(e) => uploadFile(e.target.files)}
+                onChange={(e) => uploadImage(e.target.files)}
             ></input>
         </div>
     );
