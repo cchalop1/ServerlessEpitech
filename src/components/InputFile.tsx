@@ -7,7 +7,6 @@ import {User} from "../types/User";
 import {getDownloadURL, ref, uploadBytes} from "firebase/storage";
 import {useDocument} from "react-firebase-hooks/firestore";
 
-
 type InputFileProps = {currentConvId: string}
 
 const InputFile = (props: InputFileProps) => {
