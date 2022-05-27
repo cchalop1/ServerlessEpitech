@@ -8,7 +8,7 @@ const Home = () => {
   const [currentConvId, setCurrentConvId] = useState<string | null>(null);
   return (
     <div className="h-screen pl-10 pr-10">
-      <Headers />
+      <Headers setCurrentConvId={setCurrentConvId} />
       <Conversations setCurrentConvId={setCurrentConvId} />
       {currentConvId && <div className="flex flex-col ml-80 h-screen pb-4">
         <MessagesList currentConvId={currentConvId} />
