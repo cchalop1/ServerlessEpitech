@@ -21,3 +21,23 @@ export const deleteUserDocument = functions.auth
     await db.collection("users").doc(user.uid).delete();
     await db.collection("roles").doc(user.uid).delete();
   });
+
+export const addNotificationOnAddMessage = functions.firestore
+  .document("messages/{messageId}")
+  .onCreate(async (change, context) => {
+    const newMessage = change.data();
+    const conversation = await db.collection("conversations").doc(newMessage.convID).get();
+    const userListId = Object.keys(conversation.data()?.users).filter((x) => x !== newMessage.user.uid);
+
+    userListId.forEach(async (x, idx) => {
+      const notificationBody = {
+        createdAt: Date.now(),
+        message: newMessage,
+        notifiedUserId: x,
+        read: false,
+      };
+
+      await db.collection("notifications").add(notificationBody);
+    });
+
+  });

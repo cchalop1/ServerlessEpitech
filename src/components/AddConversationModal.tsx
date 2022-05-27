@@ -76,7 +76,6 @@ const AddConversationModale = () => {
       icon: "/",
       users: Object.fromEntries(userMap),
     }).then((e) => {
-      console.log("OK");
       closeModal();
     }).catch((e) => {
       console.error(e);

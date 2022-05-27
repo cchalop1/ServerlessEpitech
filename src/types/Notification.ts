@@ -5,4 +5,5 @@ export type Notification = {
   createdAt: number;
   message: Message;
   notifiedUserId: string;
+  read: boolean;
 };

@@ -5,7 +5,7 @@ import UserList from "../components/UserList";
 const Profile = () => {
   return (
     <div className="h-screen pl-10 pr-10">
-      <Headers />
+      <Headers setCurrentConvId={null}/>
       <div className="flex">
         <ProfileCard />
         <UserList />

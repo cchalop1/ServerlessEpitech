@@ -10,7 +10,7 @@ import { Menu, Transition } from '@headlessui/react'
 import { Fragment, useEffect, useRef, useState, useContext } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/solid'
 
-import { collection, getFirestore, onSnapshot, doc } from "firebase/firestore";
+import { collection, getFirestore, onSnapshot, doc, updateDoc } from "firebase/firestore";
 
 const notyIconStyle = {
   position: "relative",
@@ -62,6 +62,18 @@ const NotifyDropdown = ({ setCurrentConvId }: NotifyProps) => {
   const notificationsRef = collection(db, "notifications");
 
   const [notifications, setNotifications] = useState<Array<Notification>>([]);
+  const [readNotificationsCount, setReadNotificationsCount] = useState<number>(0);
+
+  const setNotificationsRead = () => {
+    notifications.forEach((notif) => {
+      const current = doc(db, "notifications", notif.id)
+      updateDoc(current, { read: true }).then((e) => {
+        console.log(e);
+      }).catch((e) => {
+        console.error(e);
+      }) ;
+    });
+  }
 
   useEffect(() => {
     onSnapshot(notificationsRef, (snapshot) => {
@@ -73,10 +85,12 @@ const NotifyDropdown = ({ setCurrentConvId }: NotifyProps) => {
             id: doc.id,
             createdAt: doc.data().createdAt,
             message: doc.data().message,
+            read: doc.data().read,
             notifiedUserId: doc.data().notifiedUserId,
           };
         });
       console.log(result);
+      setReadNotificationsCount(result.filter((x) => x.read === false).length);
       setNotifications(result);
     });
   }, [authUser]);
@@ -85,8 +99,8 @@ const NotifyDropdown = ({ setCurrentConvId }: NotifyProps) => {
     <div className="text-right">
       <Menu as="div" className="relative inline-block text-left">
         <div>
-          <Menu.Button className="inline-flex w-full justify-center rounded-md bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-            <Noty count={notifications.length} />
+          <Menu.Button onClick={() => setNotificationsRead() } className="inline-flex w-full justify-center rounded-md bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+            <Noty count={readNotificationsCount} />
           </Menu.Button>
         </div>
         <Transition
@@ -101,8 +115,9 @@ const NotifyDropdown = ({ setCurrentConvId }: NotifyProps) => {
           <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             <div className="px-1 py-1 ">
               {notifications.map((notif, idx) => 
-                <div onClick={() => setCurrentConvId(notif.message.convID)} key={idx} className="hover:bg-neutral-100 hover:cursor-pointer" >
-                  {notif.message.convID}
+                <div onClick={() => setCurrentConvId(notif.message.convID)} key={idx} className="hover:bg-neutral-100 hover:cursor-pointer flex flex-row" >
+                  <img src={notif.message.user.imageUrl} alt="" className="w-10 h-10 shrink-0 rounded-full" />
+                  <p className="pt-1">{notif.message.content.length <= 18 ? notif.message.content : notif.message.content.substring(0, 16) + "..."}</p>
                 </div>
               )}
             </div>
