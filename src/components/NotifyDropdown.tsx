@@ -89,7 +89,6 @@ const NotifyDropdown = ({ setCurrentConvId }: NotifyProps) => {
             notifiedUserId: doc.data().notifiedUserId,
           };
         });
-      console.log(result);
       setReadNotificationsCount(result.filter((x) => x.read === false).length);
       setNotifications(result);
     });
