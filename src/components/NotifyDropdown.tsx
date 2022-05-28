@@ -99,7 +99,7 @@ const NotifyDropdown = ({ setCurrentConvId }: NotifyProps) => {
     <div className="text-right">
       <Menu as="div" className="relative inline-block text-left">
         <div>
-          <Menu.Button onClick={() => setNotificationsRead() } className="inline-flex w-full justify-center rounded-md bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <Menu.Button onClick={() => setNotificationsRead() } className="hover:bg-neutral-100 inline-flex w-full justify-center rounded-md bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <Noty count={readNotificationsCount} />
           </Menu.Button>
         </div>
@@ -117,7 +117,7 @@ const NotifyDropdown = ({ setCurrentConvId }: NotifyProps) => {
               {notifications.map((notif, idx) => 
                 <div onClick={() => setCurrentConvId(notif.message.convID)} key={idx} className="hover:bg-neutral-100 hover:cursor-pointer flex flex-row" >
                   <img src={notif.message.user.imageUrl} alt="" className="w-10 h-10 shrink-0 rounded-full" />
-                  <p className="pt-1">{notif.message.content.length <= 18 ? notif.message.content : notif.message.content.substring(0, 16) + "..."}</p>
+                  <p className="pt-1 pl-1">{notif.message.content.length <= 18 ? notif.message.content : notif.message.content.substring(0, 16) + "..."}</p>
                 </div>
               )}
             </div>

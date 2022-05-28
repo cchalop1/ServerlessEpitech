@@ -66,14 +66,14 @@ const Conversations = ({ setCurrentConvId }: ConversationProps) => {
 
   return (
     <>
-      <div id="sidebar">
+      <div className="" id="sidebar">
         <ProSidebar collapsed={false}>
           <SidebarHeader>
             <div className="logotext">
               <p>{"Conversations"}</p>
             </div>
           </SidebarHeader>
-          <SidebarContent>
+          <SidebarContent className="overflow-y-auto">
             <Menu iconShape="square">
               {conversations.map((conv, idx) => (
                 <MenuItem
