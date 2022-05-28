@@ -95,7 +95,7 @@ const AddConversationModale = () => {
           <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Create a conversation</h2>
           <button className="close text-base font-medium rounded-lg p-1 bg-amber-300 text-white" onClick={closeModal}>&times;</button>
         </div>
-        <div className="flex">
+        <div className="pt-2">
           <input
             className="appearance-none rounded-none relative block w-half px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
             placeholder="Conversation name"
@@ -103,10 +103,10 @@ const AddConversationModale = () => {
             type="text">
           </input>
         </div>
-        <div className="flex">
+        <div className="pt-2">
           <AutoCompleteUserList users={users} setUsers={setUsers}/>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between pt-2">
 
           {users.map((user, index) => (
 
@@ -130,7 +130,7 @@ const AddConversationModale = () => {
 
             
         </div>
-        <footer className="relative h-56 w-128">
+        <footer className="pb-2 place-items-end ">
           <input className="text-base font-medium rounded-lg p-3 bg-sky-500 text-white absolute bottom-0 right-0 h-16 w-16" type="submit" value="Send" onClick={() => onSubmit()} ></input>
         </footer>
       </Modal>
