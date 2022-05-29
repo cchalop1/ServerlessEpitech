@@ -20,7 +20,7 @@ export default function MessagesList({ currentConvId }: MessagesListProps) {
   const picturesRef = collection(db, "pictures");
 
   const q = query(messagesRef, where("convID", "==", currentConvId), orderBy("createdAt", "desc"));
-  const q2 = query(picturesRef, where("convID", "==", currentConvId), orderBy("createdAt", "desc"))
+  const q2 = query(picturesRef, where("convID", "==", currentConvId), orderBy("createdAt", "desc"));
 
   useEffect(() => {
     onSnapshot(q, (snapshot) => {
@@ -34,7 +34,7 @@ export default function MessagesList({ currentConvId }: MessagesListProps) {
             user: doc.data().user as User,
           }
         })
-        setMessages(messages)
+      setMessages(messages)
     })
     onSnapshot(q2, (snapshot) => {
       const pictures = snapshot.docs
@@ -60,8 +60,8 @@ export default function MessagesList({ currentConvId }: MessagesListProps) {
   return (
     <div className="mt-4 flex flex-col-reverse flex-grow overflow-auto justify-start items-center pb-10">
       {bubbles.length && bubbles.map((element, index) => (
-          <MessageBubble message={element} ownUID={authUser.uid} hasOwnBefore={index - 1 >= 0 && element.user.uid === bubbles[index - 1].user.uid} key={element.id} />
-     ))}
+        <MessageBubble message={element} ownUID={authUser.uid} hasOwnBefore={index - 1 >= 0 && element.user.uid === bubbles[index - 1].user.uid} key={element.id} />
+      ))}
     </div>
   )
 }
