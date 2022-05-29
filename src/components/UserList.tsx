@@ -1,7 +1,7 @@
 import { collection, doc, getFirestore, onSnapshot } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
 import { User } from "../types/User";
-import firebase, { db } from "../firebase/clientApp";
+import { db } from "../firebase/clientApp";
 import UserCard from "./UserCard";
 import { AuthContext } from "../contexts/AuthContext";
 import { useDocument } from "react-firebase-hooks/firestore";

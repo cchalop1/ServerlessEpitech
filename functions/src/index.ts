@@ -12,22 +12,38 @@ export const createUserDocument = functions.auth
       .collection("users")
       .doc(user.uid)
       .set({ email: user.email, username: "" });
-    await db.collection("roles").doc(user.uid).set({ value: "user" });
+
+    await db
+      .collection("Groups")
+      .doc("User")
+      .update({
+        users: admin.firestore.FieldValue.arrayUnion(user.uid),
+      });
   });
 
 export const deleteUserDocument = functions.auth
   .user()
   .onDelete(async (user: UserRecord) => {
     await db.collection("users").doc(user.uid).delete();
-    await db.collection("roles").doc(user.uid).delete();
+    await db
+      .collection("Groups")
+      .doc("User")
+      .update({
+        users: admin.firestore.FieldValue.arrayRemove(user.uid),
+      });
   });
 
 export const addNotificationOnAddMessage = functions.firestore
   .document("messages/{messageId}")
   .onCreate(async (change, context) => {
     const newMessage = change.data();
-    const conversation = await db.collection("conversations").doc(newMessage.convID).get();
-    const userListId = Object.keys(conversation.data()?.users).filter((x) => x !== newMessage.user.uid);
+    const conversation = await db
+      .collection("conversations")
+      .doc(newMessage.convID)
+      .get();
+    const userListId = Object.keys(conversation.data()?.users).filter(
+      (x) => x !== newMessage.user.uid
+    );
 
     userListId.forEach(async (x, idx) => {
       const notificationBody = {
@@ -39,5 +55,4 @@ export const addNotificationOnAddMessage = functions.firestore
 
       await db.collection("notifications").add(notificationBody);
     });
-
   });
