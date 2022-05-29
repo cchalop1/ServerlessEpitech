@@ -36,7 +36,7 @@ export default function MessagesList({ currentConvId }: MessagesListProps) {
   }, [currentConvId])
 
   return (
-    <div className="min-h-full flex flex-col-reverse justify-start items-center pb-10">
+    <div className="min-h-full flex flex-col-reverse justify-start items-center pb-10 overflow-y-auto">
       {/* ml-80: the sidebar covers this component otherwise, should be fixed with a flex or smth 
           min-h-full: css height is a bit to big, since the header takes some space
 
