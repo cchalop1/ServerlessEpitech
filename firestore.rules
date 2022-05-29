@@ -5,7 +5,10 @@ service cloud.firestore {
    function getConvFromMessageId(messageId) {
       return get(/databases/$(database)/documents/messages/$(messageId)).data.convID;
     }
-
+    
+    function getConvFromPictureId(messageId) {
+      return get(/databases/$(database)/documents/pictures/$(messageId)).data.convID;
+    }
 
     match /users/{userId} {
       allow read;
@@ -26,7 +29,8 @@ service cloud.firestore {
       
       allow list: if true;
       
-      allow create: if get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.value == 'manager' &&
+      allow create: if (get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.value == 'manager' 
+      							 || get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.value == 'admin') &&
       	request.resource.data.icon is string && 
         request.resource.data.name is string && 
         request.resource.data.name.size() > 0 &&
@@ -35,10 +39,12 @@ service cloud.firestore {
         request.resource.data.users.size() > 1 &&
         get(/databases/$(database)/documents/users/$(request.resource.data.userId)).data != null;
         
-			allow update: if get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.value == 'manager' &&
+			allow update: if (get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.value == 'manager' 
+      							 || get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.value == 'admin') &&
       	request.resource.data.icon is string && 
         request.resource.data.name is string && 
-        request.resource.data.userId is string;
+        request.resource.data.userId is string &&
+        get(/databases/$(database)/documents/conversation/$(convId)).data.userId == request.auth.uid;
         
 			allow delete: if get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.value == 'manager' &&
       	get(/databases/$(database)/documents/conversation/$(convId)).data.userId == request.auth.uid;
@@ -62,6 +68,41 @@ service cloud.firestore {
         request.resource.data.user.email is string &&
         request.resource.data.user.imageUrl is string && 
         request.resource.data.user.username is string;
+    }
+    
+    match /pictures/{messageId} {
+    	allow read: if get(/databases/$(database)/documents/conversations/$(getConvFromPictureId(messageId))).data.users[request.auth.uid];
+  
+			allow list: if true;
+      
+      allow create: if get(/databases/$(database)/documents/conversations/$(request.resource.data.convID)).data.users[request.auth.uid] &&
+      	request.resource.data.imageUrl is string &&
+        request.resource.data.convID is string &&
+        request.resource.data.createdAt is timestamp &&
+        request.resource.data.user is map &&
+        request.resource.data.user.email is string &&
+        request.resource.data.user.imageUrl is string && 
+        request.resource.data.user.username is string;
+    }
+    match /files/{messageId} {
+    	allow read: if get(/databases/$(database)/documents/conversations/$(getConvFromPictureId(messageId))).data.users[request.auth.uid];
+  
+			allow list: if true;
+      
+      allow create: if get(/databases/$(database)/documents/conversations/$(request.resource.data.convID)).data.users[request.auth.uid] &&
+      	request.resource.data.fileUrl is string &&
+        request.resource.data.convID is string &&
+        request.resource.data.createdAt is timestamp &&
+        request.resource.data.user is map &&
+        request.resource.data.user.email is string &&
+        request.resource.data.user.imageUrl is string && 
+        request.resource.data.user.username is string;
+    }
+    
+    match /notifications/{notificationId} {
+			allow list: if true;
+      
+      allow update: if request.auth.uid == get(/databases/$(database)/documents/notifications/$(notificationId)).data.notifiedUserId;
     }
   }
 }

@@ -3,7 +3,13 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 
-const Headers = () => {
+import NotifyDropdown from "./NotifyDropdown";
+
+type HeaderProps = {
+  setCurrentConvId: any;
+};
+
+const Headers = ({ setCurrentConvId }: HeaderProps) => {
   const authUser = useContext(AuthContext) as any;
   const navigate = useNavigate();
 
@@ -22,6 +28,11 @@ const Headers = () => {
             onClick={() => navigate("/profile", { replace: true })}
           />
         </div>
+
+        <div>
+          <NotifyDropdown setCurrentConvId={setCurrentConvId} />
+        </div>
+
         <button
           className="font-bold py-2 px-4 rounded-full border-4 border-black hover:bg-black hover:text-white"
           onClick={authUser.logout}

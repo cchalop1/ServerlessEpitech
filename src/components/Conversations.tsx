@@ -25,6 +25,7 @@ import { Conversation } from "../types/Conversation";
 import { AuthContext } from "../contexts/AuthContext";
 import { useDocument } from "react-firebase-hooks/firestore";
 import AddConversationModale from "./AddConversationModal";
+import UpdateConversationModale from "./UpdateConversationModal";
 
 type ConversationProps = {
   setCurrentConvId: any;
@@ -66,23 +67,25 @@ const Conversations = ({ setCurrentConvId }: ConversationProps) => {
 
   return (
     <>
-      <div id="sidebar">
+      <div className="" id="sidebar">
         <ProSidebar collapsed={false}>
           <SidebarHeader>
             <div className="logotext">
               <p>{"Conversations"}</p>
             </div>
           </SidebarHeader>
-          <SidebarContent>
+          <SidebarContent className="overflow-y-auto">
             <Menu iconShape="square">
               {conversations.map((conv, idx) => (
-                <MenuItem
-                  onClick={() => setCurrentConvId(conv.id)}
-                  key={idx}
-                  icon={<GiMagnifyingGlass />}
-                >
-                  {conv.name}
-                </MenuItem>
+                <div className="row" key={idx}>
+                  <MenuItem
+                    onClick={() => setCurrentConvId(conv.id)}
+                    icon={<GiMagnifyingGlass />}
+                  >
+                    <div>{conv.name}</div>
+                    {authUser.uid === conv.userId ? <UpdateConversationModale currentConvId={conv.id} /> : <></> }
+                  </MenuItem>
+                </div>
               ))}
             </Menu>
           </SidebarContent>

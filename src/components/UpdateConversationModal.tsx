@@ -12,6 +12,11 @@ import {
   onSnapshot,
   doc,
   addDoc,
+  getDoc,
+  updateDoc,
+  deleteDoc,
+  where,
+  getDocs,
 } from "firebase/firestore";
 
 import { useContext, useEffect, useState } from "react";
@@ -33,11 +38,17 @@ const customStyles = {
   },
 };
 
-const AddConversationModale = () => {
-  let subtitle : any;
+type UpdateModalProps = {
+  currentConvId: any;
+};
+
+const UpdateConversationModale = ({ currentConvId }: UpdateModalProps) => {
+  let subtitle: any;
   const authUser = (useContext(AuthContext) as any).user;
   const navigate = useNavigate();
   const conversationRef = collection(db, "conversations");
+  const usersRef = collection(db, "users");
+  const [conv, setConv] = useState<Conversation>();
   const [users, setUsers] = useState<Array<User>>([]);
   const [name, setName] = useState("");
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -47,15 +58,23 @@ const AddConversationModale = () => {
   }
 
   function afterOpenModal() {
-    // references are now sync'd and can be accessed.
     subtitle.style.fontWeight = 'bold';
   }
 
   const closeModal = () => {
     setIsOpen(false);
+  }
 
-    setUsers([]);
-    setName("");
+  const onDelete = () => {
+    if (window.confirm("Are you sure you want to delete this conversation ?")) {
+      const convDoc = doc(db, "conversations", currentConvId);
+
+      deleteDoc(convDoc).then((res) => {
+        setIsOpen(false);
+      }).catch((e) => {
+        console.error(e);
+      })
+    }
   }
 
   const onClick = (user: User) => {
@@ -66,14 +85,13 @@ const AddConversationModale = () => {
 
   const onSubmit = () => {
     let userMap = new Map();
+    const convDoc = doc(db, "conversations", currentConvId);
     (users.concat(authUser)).forEach((doc) => {
       userMap.set(doc.uid, true);
     });
 
-    addDoc(conversationRef, {
+    updateDoc(convDoc, {
       name: name,
-      userId: authUser.uid,
-      icon: "/",
       users: Object.fromEntries(userMap),
     }).then((e) => {
       closeModal();
@@ -82,9 +100,37 @@ const AddConversationModale = () => {
     });
   }
 
+  useEffect(() => {
+    onSnapshot(conversationRef, (snapshot) => {
+      const result = snapshot.docs.filter((x) => x.id === currentConvId)[0]?.data();
+      if (result) {
+        const users = Object.keys(result?.users);
+        let userList: Array<User> = [];
+
+        users.forEach((x: string) => {
+          const usersDoc = doc(usersRef, x);
+          getDoc(usersDoc).then((e) => {
+            const currentUser: User = {
+              uid: e.id,
+              email: e.data()?.email,
+              username: e.data()?.username,
+              imageUrl: e.data()?.imageUrl,
+              role: "user",
+            }
+            userList.push(currentUser);
+          });
+        });
+
+        setConv({ id: currentConvId, userId: result.userId, icon: result.icon, name: result.name, users: result.users });
+        setName(result.name);
+        setUsers(userList);
+      }
+    });
+  }, [authUser]);
+
   return (
     <div className="flex justify-content">
-      <button onClick={openModal}>Create a conversation</button>
+      <button onClick={openModal}>Edit</button>
       <Modal
         isOpen={modalIsOpen}
         onAfterOpen={afterOpenModal}
@@ -92,7 +138,7 @@ const AddConversationModale = () => {
         style={customStyles}
       >
         <div>
-          <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Create a conversation</h2>
+          <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Update a conversation</h2>
           <button className="close text-base font-medium rounded-lg p-1 bg-amber-300 text-white" onClick={closeModal}>&times;</button>
         </div>
         <div className="pt-2">
@@ -100,17 +146,18 @@ const AddConversationModale = () => {
             className="appearance-none rounded-none relative block w-half px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
             placeholder="Conversation name"
             onChange={(e) => setName(e.target.value)}
+            value={name}
             type="text">
           </input>
         </div>
         <div className="pt-2">
-          <AutoCompleteUserList users={users} setUsers={setUsers}/>
+          <AutoCompleteUserList users={users} setUsers={setUsers} />
         </div>
         <div className="flex justify-between pt-2">
 
           {users.map((user, index) => (
 
-            <div key={index}  className="flex">
+            <div key={index} className="flex">
               <img
                 className="h-12 w-12 rounded-full cursor-pointer"
                 onClick={() => onClick(user)}
@@ -125,17 +172,18 @@ const AddConversationModale = () => {
                 <div>{user.email}</div>
               </div>
             </div>
-              
+
           ))}
 
-            
+
         </div>
         <footer className="pb-2 place-items-end ">
           <input className="text-base font-medium rounded-lg p-3 bg-sky-500 text-white absolute bottom-0 right-0 h-16 w-16" type="submit" value="Send" onClick={() => onSubmit()} ></input>
+          <input className="text-base font-medium rounded-lg p-3 bg-red-500 text-white absolute bottom-0 right-20 h-16 w-16" type="submit" value="Delete" onClick={() => onDelete()} ></input>
         </footer>
       </Modal>
     </div>
   );
 };
 
-export default AddConversationModale;
+export default UpdateConversationModale;
