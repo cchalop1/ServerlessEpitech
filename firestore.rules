@@ -2,6 +2,31 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
   
+  	function hasUserRoleAdmin(userId, action) {
+      let group = get(/databases/$(database)/documents/Groups/Admin);
+      let role = get(/databases/$(database)/documents/Roles/Admin);
+      
+      return userId in group.data.users && action in role.data.actions;
+    }
+    
+    function hasUserRoleManager(userId, action) {
+      let group = get(/databases/$(database)/documents/Groups/Manager);
+      let role = get(/databases/$(database)/documents/Roles/Manager);
+      
+      return userId in group.data.users && action in role.data.actions;
+    }
+    
+    function hasUserRoleUser(userId, action) {
+      let group = get(/databases/$(database)/documents/Groups/User);
+      let role = get(/databases/$(database)/documents/Roles/User);
+      
+      return userId in group.data.users && action in role.data.actions;
+    }
+    
+    function hasUserRole(userId, action) {
+      return hasUserRoleAdmin(userId, action) || hasUserRoleManager(userId, action) || hasUserRoleUser(userId, action);
+    }
+  
    function getConvFromMessageId(messageId) {
       return get(/databases/$(database)/documents/messages/$(messageId)).data.convID;
     }
@@ -11,26 +36,27 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
-      allow read;
+      allow read: if hasUserRole(request.auth.uid, "readUser");
       
-      allow update: if userId == request.auth.uid &&
+      allow update: if hasUserRole(request.auth.uid, "updateUser") &&
+      	userId == request.auth.uid &&
       	request.resource.data.email is string &&
         request.resource.data.imageUrl is string && 
         request.resource.data.username is string && 
         request.resource.data.username.size() < 10;
         
-      allow delete: if userId == request.auth.uid ||
-      	get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.value == 'admin';
+      allow delete: if hasUserRole(request.auth.uid, "deleteUser") && 
+      	(userId == request.auth.uid ||
+      	get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.value == 'admin');
     }
     
     match /conversations/{convId} {
       allow read: if get(/databases/$(database)/documents/conversation/$(convId)).data.users[request.auth.uid] ||
       	get(/databases/$(database)/documents/conversation/$(convId)).data.userId == request.auth.uid;
       
-      allow list: if true;
+      allow list: if hasUserRole(request.auth.uid, "readConv");
       
-      allow create: if (get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.value == 'manager' 
-      							 || get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.value == 'admin') &&
+      allow create: if hasUserRole(request.auth.uid, "createConversation") &&
       	request.resource.data.icon is string && 
         request.resource.data.name is string && 
         request.resource.data.name.size() > 0 &&
@@ -39,28 +65,35 @@ service cloud.firestore {
         request.resource.data.users.size() > 1 &&
         get(/databases/$(database)/documents/users/$(request.resource.data.userId)).data != null;
         
-			allow update: if (get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.value == 'manager' 
-      							 || get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.value == 'admin') &&
-      	request.resource.data.icon is string && 
+			allow update: if hasUserRole(request.auth.uid, "updateConversation") &&
         request.resource.data.name is string && 
-        request.resource.data.userId is string &&
-        get(/databases/$(database)/documents/conversation/$(convId)).data.userId == request.auth.uid;
+        get(/databases/$(database)/documents/conversations/$(convId)).data.userId == request.auth.uid;
         
-			allow delete: if get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.value == 'manager' &&
-      	get(/databases/$(database)/documents/conversation/$(convId)).data.userId == request.auth.uid;
+			allow delete: if hasUserRole(request.auth.uid, "deleteConversation") &&
+      	get(/databases/$(database)/documents/conversations/$(convId)).data.userId == request.auth.uid;
     }
     
     match /roles/{rolesId} {
     	allow read: if true;
-      allow update: if get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.value == 'admin';
+      allow update: if hasUserRole(request.auth.uid, "updateRoles");
+    }
+    
+    match /Roles/{rolesId} {
+    	allow read: if true;
+      allow update: if hasUserRole(request.auth.uid, "updateRoles");
+    }
+    
+    match /Groups/{rolesId} {
+    	allow read: if true;
+      allow update: if hasUserRole(request.auth.uid, "updateGroup");
     }
     
     match /messages/{messageId} {
-    	allow read: if get(/databases/$(database)/documents/conversations/$(getConvFromMessageId(messageId))).data.users[request.auth.uid];
+    	allow read: if hasUserRole(request.auth.uid, "readMessage") && get(/databases/$(database)/documents/conversations/$(getConvFromMessageId(messageId))).data.users[request.auth.uid];
   
-			allow list: if true;
+			allow list: if hasUserRole(request.auth.uid, "readMessage");
       
-      allow create: if get(/databases/$(database)/documents/conversations/$(request.resource.data.convID)).data.users[request.auth.uid] &&
+      allow create: if hasUserRole(request.auth.uid, "createMessage") && get(/databases/$(database)/documents/conversations/$(request.resource.data.convID)).data.users[request.auth.uid] &&
       	request.resource.data.content is string &&
         request.resource.data.convID is string &&
         request.resource.data.createdAt is timestamp &&
@@ -71,11 +104,11 @@ service cloud.firestore {
     }
     
     match /pictures/{messageId} {
-    	allow read: if get(/databases/$(database)/documents/conversations/$(getConvFromPictureId(messageId))).data.users[request.auth.uid];
+    	allow read: if hasUserRole(request.auth.uid, "readFile") && get(/databases/$(database)/documents/conversations/$(getConvFromPictureId(messageId))).data.users[request.auth.uid];
   
-			allow list: if true;
+			allow list: if hasUserRole(request.auth.uid, "readFile");
       
-      allow create: if get(/databases/$(database)/documents/conversations/$(request.resource.data.convID)).data.users[request.auth.uid] &&
+      allow create: if hasUserRole(request.auth.uid, "createFile") && get(/databases/$(database)/documents/conversations/$(request.resource.data.convID)).data.users[request.auth.uid] &&
       	request.resource.data.imageUrl is string &&
         request.resource.data.convID is string &&
         request.resource.data.createdAt is timestamp &&
@@ -85,11 +118,11 @@ service cloud.firestore {
         request.resource.data.user.username is string;
     }
     match /files/{messageId} {
-    	allow read: if get(/databases/$(database)/documents/conversations/$(getConvFromPictureId(messageId))).data.users[request.auth.uid];
+    	allow read: if hasUserRole(request.auth.uid, "readFile") && get(/databases/$(database)/documents/conversations/$(getConvFromPictureId(messageId))).data.users[request.auth.uid];
   
-			allow list: if true;
+			allow list: if hasUserRole(request.auth.uid, "readFile");
       
-      allow create: if get(/databases/$(database)/documents/conversations/$(request.resource.data.convID)).data.users[request.auth.uid] &&
+      allow create: if hasUserRole(request.auth.uid, "createFile") && get(/databases/$(database)/documents/conversations/$(request.resource.data.convID)).data.users[request.auth.uid] &&
       	request.resource.data.fileUrl is string &&
         request.resource.data.convID is string &&
         request.resource.data.createdAt is timestamp &&
@@ -100,9 +133,9 @@ service cloud.firestore {
     }
     
     match /notifications/{notificationId} {
-			allow list: if true;
+			allow list: if hasUserRole(request.auth.uid, "readNotifications");
       
-      allow update: if request.auth.uid == get(/databases/$(database)/documents/notifications/$(notificationId)).data.notifiedUserId;
+      allow update: if hasUserRole(request.auth.uid, "updateNotifications") && request.auth.uid == get(/databases/$(database)/documents/notifications/$(notificationId)).data.notifiedUserId;
     }
   }
 }
