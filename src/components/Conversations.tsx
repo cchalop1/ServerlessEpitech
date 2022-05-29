@@ -36,10 +36,10 @@ const Conversations = ({ setCurrentConvId }: ConversationProps) => {
   const conversationsRef = collection(db, "conversations");
   const navigate = useNavigate();
   const [conversations, setConversation] = useState<Array<Conversation>>([]);
-  const userDoc = doc(db, "roles", authUser.uid);
-  const [userRole, loadingRole, errorRole] = useDocument(userDoc);
+  const userGroupsRef = doc(db, "Groups", "User");
+  const [usersGroups] = useDocument(userGroupsRef);
 
-  if (!loadingRole && !authUser) {
+  if (!authUser) {
     navigate("/login", { replace: true });
     return <div></div>;
   }
@@ -61,10 +61,6 @@ const Conversations = ({ setCurrentConvId }: ConversationProps) => {
     });
   }, [authUser]);
 
-  if (loadingRole) {
-    return <p>Loading...</p>;
-  }
-
   return (
     <>
       <div className="" id="sidebar">
@@ -83,25 +79,24 @@ const Conversations = ({ setCurrentConvId }: ConversationProps) => {
                     icon={<GiMagnifyingGlass />}
                   >
                     <div>{conv.name}</div>
-                    {authUser.uid === conv.userId ? <UpdateConversationModale currentConvId={conv.id} /> : <></> }
+                    {authUser.uid === conv.userId ? (
+                      <UpdateConversationModale currentConvId={conv.id} />
+                    ) : (
+                      <></>
+                    )}
                   </MenuItem>
                 </div>
               ))}
             </Menu>
           </SidebarContent>
           <SidebarFooter>
-            {userRole?.data()?.value === "admin" ||
-            userRole?.data()?.value === "manager" ? (
+            {!usersGroups?.data()?.users.includes(authUser.uid) && (
               <Menu iconShape="square">
-                <MenuItem
-                  icon={<FaUserPlus />}
-                >
-                    <p>Create a conversation</p>
-                    <AddConversationModale></AddConversationModale>
+                <MenuItem icon={<FaUserPlus />}>
+                  <p>Create a conversation</p>
+                  <AddConversationModale></AddConversationModale>
                 </MenuItem>
               </Menu>
-            ) : (
-              <></>
             )}
           </SidebarFooter>
         </ProSidebar>
