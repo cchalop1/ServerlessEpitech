@@ -2,8 +2,8 @@ import { User } from "./User";
 
 export type Conversation = {
   id: string;
-  icon: String;
-  name: String;
+  icon: string;
+  name: string;
   userId: User;
   users: [User];
 };

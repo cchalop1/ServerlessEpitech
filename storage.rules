@@ -5,5 +5,13 @@ service firebase.storage {
       allow read: if true;
       allow write: if request.auth.uid == userId;
     }
+     match /pictures/{userId}/{fileName} {
+      allow read: if true;
+      allow write: if request.auth.uid == userId;
+    }
+    match /files/{userId}/{fileName} {
+      allow read: if true;
+      allow write: if request.auth.uid == userId;
+    }
   }
 }

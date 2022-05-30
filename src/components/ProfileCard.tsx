@@ -1,11 +1,11 @@
 import { CheckIcon, PencilIcon } from "@heroicons/react/outline";
 
 import { useContext, useEffect, useRef, useState } from "react";
-import { getFirestore, doc, updateDoc } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { doc, updateDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useDocument } from "react-firebase-hooks/firestore";
 
-import firebase, { db, storage } from "../firebase/clientApp";
+import { db, storage } from "../firebase/clientApp";
 import { AuthContext } from "../contexts/AuthContext";
 import { User } from "../types/User";
 
@@ -110,6 +110,7 @@ const ProfileCard = () => {
       </div>
     </div>
   );
+  return <></>
 };
 
 export default ProfileCard;

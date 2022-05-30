@@ -38,21 +38,13 @@ const InputMessage = (props : InputMessageProps) => {
   };
 
   return (
-    <div id="input-message" className="justify-self-end pb-4 shadow-lg">
+    <div id="input-message" className="justify-self-end pb-4">
       <form onSubmit={submit}>
-        { messageInput.length == 0 ? (
-            <input className="w-full border-2 border-grey border-solid rounded-tl-lg rounded-tr-lg rounded-br-lg rounded-bl-lg"
-                   placeholder="Enter your message"
-                   value={messageInput}
-                   onChange={(e) => setMessageInput(e.target.value)}
-            ></input>
-        ) : (
-            <input className="w-full border-2 border-blue border-solid rounded-tl-lg rounded-tr-lg rounded-br-lg rounded-bl-lg"
-                   placeholder="Enter your message"
-                   value={messageInput}
-                   onChange={(e) => setMessageInput(e.target.value)}
-            ></input>
-        )}
+        <input className="w-full border-2 border-grey border-solid rounded-tl-lg rounded-tr-lg rounded-br-lg rounded-bl-lg"
+               placeholder="Enter your message"
+               value={messageInput}
+               onChange={(e) => setMessageInput(e.target.value)}
+        ></input>
       </form>
     </div>
   );

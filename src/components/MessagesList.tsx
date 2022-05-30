@@ -75,7 +75,7 @@ export default function MessagesList({ currentConvId }: MessagesListProps) {
   }, [messages, pictures])
 
   return (
-    <div className="mt-4 flex flex-col-reverse flex-grow overflow-auto justify-start items-center pb-10">
+    <div className="flex flex-col-reverse flex-grow overflow-y-auto justify-start items-center pb-10">
       {bubbles.length && bubbles.map((element, index) => (
         <MessageBubble message={element} ownUID={authUser.uid} hasOwnBefore={index - 1 >= 0 && element.user.uid === bubbles[index - 1].user.uid} key={element.id} />
       ))}

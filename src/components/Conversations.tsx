@@ -25,6 +25,7 @@ import { Conversation } from "../types/Conversation";
 import { AuthContext } from "../contexts/AuthContext";
 import { useDocument } from "react-firebase-hooks/firestore";
 import AddConversationModale from "./AddConversationModal";
+import UpdateConversationModale from "./UpdateConversationModal";
 
 type ConversationProps = {
   setCurrentConvId: any;
@@ -35,10 +36,10 @@ const Conversations = ({ setCurrentConvId }: ConversationProps) => {
   const conversationsRef = collection(db, "conversations");
   const navigate = useNavigate();
   const [conversations, setConversation] = useState<Array<Conversation>>([]);
-  const userDoc = doc(db, "roles", authUser.uid);
-  const [userRole, loadingRole, errorRole] = useDocument(userDoc);
+  const userGroupsRef = doc(db, "Groups", "User");
+  const [usersGroups] = useDocument(userGroupsRef);
 
-  if (!loadingRole && !authUser) {
+  if (!authUser) {
     navigate("/login", { replace: true });
     return <div></div>;
   }
@@ -60,45 +61,42 @@ const Conversations = ({ setCurrentConvId }: ConversationProps) => {
     });
   }, [authUser]);
 
-  if (loadingRole) {
-    return <p>Loading...</p>;
-  }
-
   return (
     <>
-      <div id="sidebar">
+      <div className="" id="sidebar">
         <ProSidebar collapsed={false}>
           <SidebarHeader>
             <div className="logotext">
               <p>{"Conversations"}</p>
             </div>
           </SidebarHeader>
-          <SidebarContent>
+          <SidebarContent className="overflow-y-auto">
             <Menu iconShape="square">
               {conversations.map((conv, idx) => (
-                <MenuItem
-                  onClick={() => setCurrentConvId(conv.id)}
-                  key={idx}
-                  icon={<GiMagnifyingGlass />}
-                >
-                  {conv.name}
-                </MenuItem>
+                <div className="row" key={idx}>
+                  <MenuItem
+                    onClick={() => setCurrentConvId(conv.id)}
+                    icon={<GiMagnifyingGlass />}
+                  >
+                    <div>{conv.name}</div>
+                    {authUser.uid === conv.userId ? (
+                      <UpdateConversationModale currentConvId={conv.id} />
+                    ) : (
+                      <></>
+                    )}
+                  </MenuItem>
+                </div>
               ))}
             </Menu>
           </SidebarContent>
           <SidebarFooter>
-            {userRole?.data()?.value === "admin" ||
-            userRole?.data()?.value === "manager" ? (
+            {!usersGroups?.data()?.users.includes(authUser.uid) && (
               <Menu iconShape="square">
-                <MenuItem
-                  icon={<FaUserPlus />}
-                >
-                    <p>Create a conversation</p>
-                    <AddConversationModale></AddConversationModale>
+                <MenuItem icon={<FaUserPlus />}>
+                  <p>Create a conversation</p>
+                  <AddConversationModale></AddConversationModale>
                 </MenuItem>
               </Menu>
-            ) : (
-              <></>
             )}
           </SidebarFooter>
         </ProSidebar>
