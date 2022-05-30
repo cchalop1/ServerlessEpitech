@@ -1,9 +1,12 @@
 import { Message } from "../types/Messages";
 import { Picture } from "../types/Pictures";
+import { FileMessage } from "../types/FileMessage";
 import { useState } from "react";
+import { Link } from "react-router-dom"
+import fileLogo from '../assets/file.png'
 
 type MessageBubbleProps = {
-  message: Message | Picture;
+  message: Message | Picture | FileMessage;
   ownUID: string;
   hasOwnBefore: boolean;
 };
@@ -27,6 +30,10 @@ export function MessageBubble({ message, ownUID, hasOwnBefore }: MessageBubblePr
           >
             {"content" in message && message.content}
             {"imageUrl" in message && <img src={message.imageUrl} />}
+            {"fileUrl" in message && <a href={message.fileUrl} className="flex flex-row content-center">
+              <img src={fileLogo} alt={`file from ${message.user.username}`} className="w-10" />
+              <div className="p-2">File Sent</div>
+            </a>}
           </div>
           {!hasOwnBefore && <div>{date?.toLocaleString()}</div>}
         </div>
