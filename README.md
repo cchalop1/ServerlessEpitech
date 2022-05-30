@@ -19,6 +19,10 @@ npm run dev
 
 and when the project is runing you can check your http://localhost:3000 and register a new account
 
+### Schema model
+
+[]
+
 ---
 ### Team
 
