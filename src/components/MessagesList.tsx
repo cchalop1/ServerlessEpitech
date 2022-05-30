@@ -20,11 +20,11 @@ export default function MessagesList({ currentConvId }: MessagesListProps) {
   const [files, setFiles] = useState<Array<FileMessage>>([]);
   const messagesRef = collection(db, "messages");
   const picturesRef = collection(db, "pictures");
-  const filesRef = collection(db, "pictures");
+  const filesRef = collection(db, "files");
 
   const q = query(messagesRef, where("convID", "==", currentConvId), orderBy("createdAt", "desc"));
   const q2 = query(picturesRef, where("convID", "==", currentConvId), orderBy("createdAt", "desc"));
-  const q3 = query(picturesRef, where("convID", "==", currentConvId), orderBy("createdAt", "desc"));
+  const q3 = query(filesRef, where("convID", "==", currentConvId) );
 
   useEffect(() => {
     onSnapshot(q, (snapshot) => {
