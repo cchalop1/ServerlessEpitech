@@ -10,7 +10,7 @@ const Home = () => {
     <div className="h-screen pl-10 pr-10">
       <Headers setCurrentConvId={setCurrentConvId} />
       <Conversations setCurrentConvId={setCurrentConvId} />
-      {currentConvId && <div className="flex flex-col ml-80 h-screen pb-4">
+      {currentConvId && <div className="flex flex-col ml-80 h-[92vh] p-4">
         <MessagesList currentConvId={currentConvId} />
         <InputMessage currentConvId={currentConvId} />
       </div>}
