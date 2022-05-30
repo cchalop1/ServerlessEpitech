@@ -1,9 +1,9 @@
 import { User } from "./User";
 
-export type Message = {
+export type Picture = {
   id: string;
   convID: string;
-  content: string;
+  imageUrl: string;
   createdAt: any;
   user: User;
 };
