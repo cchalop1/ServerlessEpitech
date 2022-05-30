@@ -21,7 +21,7 @@ and when the project is runing you can check your http://localhost:3000 and regi
 
 ### Schema model
 
-[]
+![alt text](https://raw.githubusercontent.com/cchalop1/ServerlessEpitech/main/serverless_diagram.png?token=GHSAT0AAAAAABMZHYDOLHTVB5RAZ3QTLYY6YUURHWQ)
 
 ---
 ### Team
