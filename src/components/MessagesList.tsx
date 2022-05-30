@@ -72,7 +72,7 @@ export default function MessagesList({ currentConvId }: MessagesListProps) {
     const bubbles = [...pictures, ...messages, ...files]
     bubbles.sort((a, b) => b?.createdAt?.seconds - a?.createdAt?.seconds)
     setBubbles(bubbles)
-  }, [messages, pictures])
+  }, [messages, pictures, files])
 
   return (
     <div className="flex flex-col-reverse flex-grow overflow-y-auto justify-start items-center pb-10">
