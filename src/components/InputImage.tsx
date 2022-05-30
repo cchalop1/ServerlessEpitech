@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from "react";
+import React, {useContext, useEffect, useRef, useState, Fragment} from "react";
 import firebase, {storage, db} from "../firebase/clientApp";
 
 import {addDoc, collection, doc, getFirestore, serverTimestamp, updateDoc} from "firebase/firestore";
@@ -48,7 +48,7 @@ const InputImage = (props: InputImageProps) => {
     };
 
     return(
-        <div className={"justify-self-end pb-4"}>
+        <Fragment>
             <img
                 alt={"input-image"}
                 onClick={() => inputFileRef.current && inputFileRef.current.click()}
@@ -62,7 +62,7 @@ const InputImage = (props: InputImageProps) => {
                 accept=".jpg, .jpeg"
                 onChange={(e) => uploadImage(e.target.files)}
             ></input>
-        </div>
+        </Fragment>
     );
 }
 

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from "react";
+import React, {Fragment, useContext, useEffect, useRef, useState} from "react";
 import firebase, {storage, db} from "../firebase/clientApp";
 
 import {addDoc, collection, doc, getFirestore, serverTimestamp, updateDoc} from "firebase/firestore";
@@ -46,7 +46,7 @@ const InputFile = (props: InputFileProps) => {
     };
 
     return(
-        <div className={"justify-self-end pb-4"}>
+        <Fragment>
             <img
                 alt={"input-file"}
                 onClick={() => inputFileRef.current && inputFileRef.current.click()}
@@ -60,7 +60,7 @@ const InputFile = (props: InputFileProps) => {
                 accept=".pdf"
                 onChange={(e) => uploadFile(e.target.files)}
             ></input>
-        </div>
+        </Fragment>
     );
 }
 

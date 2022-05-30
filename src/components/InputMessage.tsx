@@ -5,6 +5,8 @@ import {addDoc, collection, doc, getFirestore, serverTimestamp} from "firebase/f
 import {AuthContext} from "../contexts/AuthContext";
 import {useDocument} from "react-firebase-hooks/firestore";
 import {User} from "../types/User";
+import InputFile from "./InputFile";
+import InputImage from "./InputImage";
 
 const db = getFirestore(firebase);
 
@@ -38,14 +40,18 @@ const InputMessage = (props : InputMessageProps) => {
   };
 
   return (
-    <div id="input-message" className="justify-self-end pb-4">
-      <form onSubmit={submit}>
-        <input className="w-full border-2 border-grey border-solid rounded-tl-lg rounded-tr-lg rounded-br-lg rounded-bl-lg"
-               placeholder="Enter your message"
-               value={messageInput}
-               onChange={(e) => setMessageInput(e.target.value)}
-        ></input>
-      </form>
+    <div id="input-message" className="justify-self-end pb-4 flex flex-wrap">
+      <div className={"w-10/12"}>
+          <form onSubmit={submit}>
+              <input className="w-full border-2 border-grey border-solid rounded-tl-lg rounded-tr-lg rounded-br-lg rounded-bl-lg"
+                     placeholder="Enter your message"
+                     value={messageInput}
+                     onChange={(e) => setMessageInput(e.target.value)}
+              ></input>
+          </form>
+      </div>
+      <InputImage currentConvId={props.currentConvId}/>
+      <InputFile currentConvId={props.currentConvId} />
     </div>
   );
 };
